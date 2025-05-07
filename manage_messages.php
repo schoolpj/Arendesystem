@@ -1,6 +1,15 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['user_roll'] != 'admin') {
+    header("Location: login.php");
+    exit();
+}
+?>
+
+<?php
 include 'db.php';
 ?>
+
 
 <h1>Inkommande Kundmeddelanden</h1>
 

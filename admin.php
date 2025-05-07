@@ -1,57 +1,34 @@
 <?php
 include 'db.php';
-?>
 
-<h1>Admin - Hantera Ärenden</h1>
-
-<table border="1" cellpadding="10" cellspacing="0">
-    <tr>
-        <th>ID</th>
-        <th>Titel</th>
-        <th>Beskrivning</th>
-        <th>Status</th>
-        <th>Prioritet</th>
-        <th>Rapportör</th>
-        <th>Datum</th>
-        <th>Ändra Status</th>
-        <th>Ta bort</th>
-    </tr>
-
-<?php
-$stmt = $conn->query("SELECT * FROM tickets ORDER BY datum DESC");
-$tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-foreach ($tickets as $ticket) {
-    echo "<tr>";
-    echo "<td>" . $ticket['id'] . "</td>";
-    echo "<td>" . htmlspecialchars($ticket['titel']) . "</td>";
-    echo "<td>" . nl2br(htmlspecialchars($ticket['beskrivning'])) . "</td>";
-    echo "<td>" . $ticket['status'] . "</td>";
-    echo "<td>" . $ticket['prioritet'] . "</td>";
-    echo "<td>" . htmlspecialchars($ticket['rapportor']) . "</td>";
-    echo "<td>" . $ticket['datum'] . "</td>";
-
-    echo "<td>
-        <form action='update_status.php' method='POST'>
-            <input type='hidden' name='id' value='" . $ticket['id'] . "'>
-            <select name='status'>
-                <option value='öppen' " . ($ticket['status'] == 'öppen' ? 'selected' : '') . ">Öppen</option>
-                <option value='pågående' " . ($ticket['status'] == 'pågående' ? 'selected' : '') . ">Pågående</option>
-                <option value='stängd' " . ($ticket['status'] == 'stängd' ? 'selected' : '') . ">Stängd</option>
-            </select>
-            <button type='submit'>Uppdatera</button>
-        </form>
-    </td>";
-
-    echo "<td>
-        <form action='delete_ticket.php' method='POST' onsubmit='return confirm(\"Är du säker på att du vill ta bort detta ärende?\")'>
-            <input type='hidden' name='id' value='" . $ticket['id'] . "'>
-            <button type='submit' style='color:red;'>Ta bort</button>
-        </form>
-    </td>";
-
-    echo "</tr>";
+if (!isset($_SESSION['user_id']) || $_SESSION['roll'] !== 'admin') {
+    header('Location: login.php');
+    exit();
 }
+
+// Hämta alla meddelanden
+$query = "SELECT m.*, u.namn, u.email FROM messages m JOIN users u ON m.user_id = u.id ORDER BY m.created_at DESC";
+$result = mysqli_query($conn, $query);
 ?>
 
+<h2>Adminpanel</h2>
+<p>Välkommen, <?php echo $_SESSION['namn']; ?> (Admin)</p>
+<a href="logout.php">Logga ut</a>
+
+<h3>Inkomna ärenden</h3>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Namn</th>
+        <th>Email</th>
+        <th>Meddelande</th>
+        <th>Datum</th>
+    </tr>
+    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+        <tr>
+            <td><?php echo htmlspecialchars($row['namn']); ?></td>
+            <td><?php echo htmlspecialchars($row['email']); ?></td>
+            <td><?php echo nl2br(htmlspecialchars($row['message'])); ?></td>
+            <td><?php echo $row['created_at']; ?></td>
+        </tr>
+    <?php endwhile; ?>
 </table>
