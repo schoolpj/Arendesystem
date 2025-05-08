@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
+<link rel="stylesheet" href="style-signup.css">
 <form method="POST">
     <h2>Skapa konto</h2>
     <input type="text" name="namn" placeholder="Namn" required><br>

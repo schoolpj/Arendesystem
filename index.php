@@ -6,12 +6,12 @@ include 'db.php';
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <title>Ärendesystem</title>
+    <title>El-fixare</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>Välkommen till Ärendesystemet</h1>
+    <h1>Välkommen till El-fixare</h1>
 
     <?php if (isset($_SESSION['user_id'])): ?>
         <p>Du är inloggad som <?php echo $_SESSION['namn']; ?> (<?php echo $_SESSION['roll']; ?>)</p>
