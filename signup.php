@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $namn = $_POST['namn'];
     $email = $_POST['email'];
     $losenord = password_hash($_POST['lösenord'], PASSWORD_DEFAULT);
-    $roll = 'kund'; // Alla nya användare får rollen kund
+    $roll = 'kund';
 
     $stmt = mysqli_prepare($conn, "INSERT INTO users (namn, email, losenord, roll) VALUES (?, ?, ?, ?)");
     mysqli_stmt_bind_param($stmt, "ssss", $namn, $email, $losenord, $roll);
